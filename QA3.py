@@ -52,10 +52,9 @@ def initialize_database():
                  "b) Application Protocol Integration","c) Automated Process Implementation","d) Analytics and Performance Insights",1),
                 ("What is a common characteristic of microservices architecture?","a) Monolithic codebase",
                  "b) Scalability through independent components","c) Centralized database schema",
-                 "d) Lack of API communication",2)
-            ]
-        }   
-        {    
+                 "d) Lack of API communication",2),
+            ],
+            
             "BusinessLaw":[
                 ("What does 'liability' mean in business law?", 
                  "The ability to manage finances", "Responsibility for damages", 
@@ -63,9 +62,26 @@ def initialize_database():
                 ("What is a contract?", 
                  "An informal agreement", "A legally binding agreement", 
                  "A government rule", "A business operation", 2),
+                ("What is the purpose of intellectual property law?","a) To regulate financial transactions",
+                 "b) To protect creative works and inventions","c) To govern international trade agreements",
+                 "d) To enforce labor contracts",2),
+                ("Which of the following is an example of a tort?","a) Breach of contract",
+                 "b) Defamation of character","c) Filing for bankruptcy","d) Signing a lease agreement",2),
+                ("What is the primary function of employment law?","a) To regulate salary payments",
+                 "b) To provide protections for workers and employers","c) To create job opportunities",
+                 "d) To issue permits for business startups",2),
+                ("What is bankruptcy in business law?","a) A financial penalty for tax fraud","b) A legal process for resolving insolvency",
+                 "c) A clause in partnership agreements,","d) A type of corporate investment",2),
+                ("Which law governs consumer protection?","a) Contract law","b) Antitrust law","c) Advertising law",
+                 "d) Product liability law",4),
+                ("What is the role of antitrust law?","a) To regulate intellectual property ownership","b) To prevent unfair competition and monopolies",
+                 "c) To protect workers from discrimination","d) To establish taxation rules",2),
+                ("Which of the following describes the doctrine of negligence?","a) Failure to exercise reasonable care",
+                 "b) Intentionally causing harm","c) Violation of a court order","d) Breach of partnership agreement",1),
+                ("Which type of business entity offers limited liability protection?","a) Sole proprietorship","b) General partnership",
+                 "c) Limited Liability Company (LLC)","d) Corporation",3)
             ],
-        }
-        {
+       
             "DataAnalytics": [
                 ("What is data visualization?", 
                  "Storing data", "Cleaning data", "Graphically representing data", 
@@ -73,8 +89,7 @@ def initialize_database():
                 ("Which of the following is a common data analytics tool?", 
                  "Excel", "Photoshop", "Final Cut Pro", "AutoCAD", 1),
             ],
-        }
-        {
+       
             "DatabaseManagement": [
                 ("What is SQL used for?", 
                 "Creating websites", "Managing databases", "Analyzing graphs", 
@@ -105,6 +120,31 @@ class QuizBowlApp:
         self.root.title("Quiz Bowl Application")
         self.current_frame = None
         self.show_login_screen()
+
+    def show_quiz_taker_workflow(self):
+        """Show the quiz taker workflow."""
+        self.clear_frame()
+        self.current_frame = tk.Frame(self.root)
+        self.current_frame.pack()
+
+        tk.Label(self.current_frame, text="Select a course to begin the quiz:").pack(pady=10)
+        self.quiz_course_var = tk.StringVar()
+        course_dropdown = tk.OptionMenu(self.current_frame, self.quiz_course_var,
+                                        "ApplicationsDevelopment", "BusinessLaw", 
+                                        "DataAnalytics", "DatabaseManagement")
+        course_dropdown.pack()
+
+        tk.Button(self.current_frame, text="Start Quiz", 
+                  command=lambda: self.launch_quiz(self.quiz_course_var.get())).pack(pady=10)
+        tk.Button(self.current_frame, text="Back", command=self.show_login_screen).pack(pady=10)
+
+    def launch_quiz(self, course):
+        """Launch the quiz interface for the selected course."""
+        if not course:
+            messagebox.showerror("Error", "Please select a course!")
+            return
+        self.clear_frame()
+        start_quiz(self.root, course)
 
     def clear_frame(self):
         """Destroy the current frame to transition to a new one."""
@@ -559,69 +599,6 @@ class QuizTaker:
 # Function to launch the quiz interface
 def start_quiz(root, course):
     QuizTaker(root, course)
-
-# Main application
-class QuizBowlApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Quiz Bowl Application")
-        self.current_frame = None
-        self.show_login_screen()
-
-    def clear_frame(self):
-        """Destroy the current frame to transition to a new one."""
-        if self.current_frame:
-            self.current_frame.destroy()
-
-    def show_login_screen(self):
-        self.clear_frame()
-        self.current_frame = tk.Frame(self.root)
-        self.current_frame.pack()
-
-        tk.Label(self.current_frame, text="Welcome to Quiz Bowl! Please log in.").pack(pady=10)
-
-        # Administrator login
-        tk.Label(self.current_frame, text="Administrator Login").pack(pady=5)
-        self.password_entry = tk.Entry(self.current_frame, show="*")
-        self.password_entry.pack()
-        tk.Button(self.current_frame, text="Login as Administrator", command=self.admin_login).pack(pady=10)
-
-        # Quiz taker access
-        tk.Label(self.current_frame, text="Quiz Taker Access").pack(pady=5)
-        tk.Button(self.current_frame, text="Continue as Quiz Taker", command=self.show_quiz_taker_workflow).pack(pady=10)
-
-    def admin_login(self):
-        """Handle administrator login."""
-        if self.password_entry.get() == "admin123":  # Example password
-            messagebox.showinfo("Success", "Welcome, Administrator!")
-            self.show_admin_workflow()
-        else:
-            messagebox.showerror("Error", "Incorrect Password!")
-
-    def show_quiz_taker_workflow(self):
-        """Show the quiz taker workflow."""
-        self.clear_frame()
-        self.current_frame = tk.Frame(self.root)
-        self.current_frame.pack()
-
-        tk.Label(self.current_frame, text="Select a course to begin the quiz:").pack(pady=10)
-        self.quiz_course_var = tk.StringVar()
-        course_dropdown = tk.OptionMenu(self.current_frame, self.quiz_course_var,
-                                        "ApplicationsDevelopment", "BusinessLaw", 
-                                        "DataAnalytics", "DatabaseManagement")
-        course_dropdown.pack()
-
-        tk.Button(self.current_frame, text="Start Quiz", 
-                  command=lambda: self.launch_quiz(self.quiz_course_var.get())).pack(pady=10)
-        tk.Button(self.current_frame, text="Back", command=self.show_login_screen).pack(pady=10)
-
-    def launch_quiz(self, course):
-        """Launch the quiz interface for the selected course."""
-        if not course:
-            messagebox.showerror("Error", "Please select a course!")
-            return
-        self.clear_frame()
-        start_quiz(self.root, course)
 
 if __name__ == "__main__":
     initialize_database()
